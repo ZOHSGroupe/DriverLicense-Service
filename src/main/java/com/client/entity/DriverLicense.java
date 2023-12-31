@@ -30,8 +30,6 @@ public class DriverLicense {
     @ManyToOne
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     Client client;
-    @OneToMany(mappedBy = "driverLicense",fetch = FetchType.LAZY)
-    List<Link> linkList;
     @PrePersist
     protected void onCreate() {
         // Set the default value for the 'date' field to the current date

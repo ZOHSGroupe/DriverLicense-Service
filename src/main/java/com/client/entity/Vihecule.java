@@ -38,8 +38,6 @@ public class Vihecule{
     @Enumerated(value = EnumType.STRING)
     Status status;
     @Temporal(TemporalType.DATE)
-    Date lastModificationDate;
-    @Temporal(TemporalType.DATE)
     Date dateCreation;
 
     @ManyToOne
@@ -52,10 +50,6 @@ public class Vihecule{
 
     @OneToOne(mappedBy = "vihecule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Contrat contrat;
-
-    @OneToMany(mappedBy = "vihecule",fetch = FetchType.LAZY)
-    List<Link> linkList;
-
 
 
     @PrePersist

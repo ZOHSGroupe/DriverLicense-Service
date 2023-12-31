@@ -17,6 +17,4 @@ public class Contrat {
     Date dateFin;
     @OneToOne
     Vihecule vihecule;
-    @OneToOne(mappedBy = "contrat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    Link link;
 }
