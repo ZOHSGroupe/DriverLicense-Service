@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  # MariaDB service
+  mariadb_db:
+    container_name: mariadb
+    image: mariadb:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${MYSQL_LOCAL_PORT}:${MYSQL_DOCKER_PORT}"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+  # Spring Boot service
+  spring_app:
+    build: .
+    ports:
+      - "${SPRING_LOCAL_PORT}:${SPRING_DOCKER_PORT}"
+    environment:
+      PORT: ${SPRING_DOCKER_PORT}
+      DB_HOST: mariadb_db
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      MYSQL_URI: "jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}?createDatabaseIfNotExist=true"
+    depends_on:
+      - mariadb_db
+
+volumes:
+  mariadb_data: {}
+
+
