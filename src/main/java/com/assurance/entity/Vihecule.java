@@ -45,7 +45,7 @@ public class Vihecule{
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     Client client;
 
-    @OneToOne(mappedBy = "vihecule", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "vihecule", fetch = FetchType.LAZY)
     @JsonManagedReference
     Assurance assurance;
 

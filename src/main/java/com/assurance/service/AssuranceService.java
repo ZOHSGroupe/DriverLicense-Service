@@ -1,7 +1,11 @@
 package com.assurance.service;
 
 import com.assurance.dto.AssuranceCreateDTO;
+import com.assurance.dto.AssuranceDTO;
+import com.assurance.dto.AssuranceUpdateDTO;
 import com.assurance.entity.Assurance;
+import com.assurance.exception.AssuranceAlreadyExistsException;
+import com.assurance.exception.AssuranceNotFoundException;
 import com.assurance.repository.AssuranceRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +27,33 @@ public class AssuranceService {
         this.modelMapper = modelMapper;
     }
 
-    public AssuranceCreateDTO saveAssurance(AssuranceCreateDTO assuranceCreateDTO) {
-        Assurance assurance = modelMapper.map(assuranceCreateDTO, Assurance.class);
-        // You can perform additional business logic here before saving
-        assurance = assuranceRepository.save(assurance);
-        return modelMapper.map(assurance, AssuranceCreateDTO.class);
+
+    public Optional<AssuranceCreateDTO> saveAssurance(AssuranceCreateDTO assuranceCreateDTO) {
+            String viheculeId = assuranceCreateDTO.getViheculeId();
+
+            // Check if an assurance already exists for the specified viheculeId
+            if (!assuranceRepository.findByViheculeId(viheculeId).isEmpty()) {
+                throw new AssuranceAlreadyExistsException("Assurance already exists for viheculeId " + viheculeId);
+            }
+
+            Assurance assurance = modelMapper.map(assuranceCreateDTO, Assurance.class);
+            // You can perform additional business logic here before saving
+            assurance = assuranceRepository.save(assurance);
+
+            AssuranceCreateDTO createdAssuranceDTO = modelMapper.map(assurance, AssuranceCreateDTO.class);
+            return Optional.of(createdAssuranceDTO);
     }
 
-    public List<AssuranceCreateDTO> getAllAssurances() {
+    public List<AssuranceDTO> getAllAssurances() {
         List<Assurance> assurances = assuranceRepository.findAll();
         return assurances.stream()
-                .map(assurance -> modelMapper.map(assurance, AssuranceCreateDTO.class))
+                .map(assurance -> modelMapper.map(assurance, AssuranceDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public Optional<AssuranceCreateDTO> getAssuranceById(String id) {
+    public Optional<AssuranceDTO> getAssuranceById(String id) {
         return assuranceRepository.findById(id)
-                .map(assurance -> modelMapper.map(assurance, AssuranceCreateDTO.class));
+                .map(assurance -> modelMapper.map(assurance, AssuranceDTO.class));
     }
 
     public boolean deleteAssuranceById(String id) {
@@ -59,24 +73,38 @@ public class AssuranceService {
     }
 
 
-    public AssuranceCreateDTO updateAssurance(String id, AssuranceCreateDTO updatedAssuranceCreateDTO) {
+    public AssuranceDTO updateAssurance(String id, AssuranceUpdateDTO updateAssuranceDTO) {
         Optional<Assurance> existingAssuranceOptional = assuranceRepository.findById(id);
+
         if (existingAssuranceOptional.isPresent()) {
             Assurance existingAssurance = existingAssuranceOptional.get();
-            modelMapper.map(updatedAssuranceCreateDTO, existingAssurance);
+
+            // Update fields if provided in the UpdateAssuranceDTO
+            if (updateAssuranceDTO.getType() != null) {
+                existingAssurance.setType(updateAssuranceDTO.getType());
+            }
+
+            if (updateAssuranceDTO.getStatus() != null) {
+                existingAssurance.setStatus(updateAssuranceDTO.getStatus());
+            }
+            if (updateAssuranceDTO.getPrice() != null) {
+                existingAssurance.setPrice(updateAssuranceDTO.getPrice());
+            }
+
             // You can perform additional business logic here before updating
             existingAssurance = assuranceRepository.save(existingAssurance);
-            return modelMapper.map(existingAssurance, AssuranceCreateDTO.class);
+            return modelMapper.map(existingAssurance, AssuranceDTO.class);
         } else {
             // Handle not found case
-            return null;
+            throw new AssuranceNotFoundException("Assurance not found for id: " + id);
         }
     }
 
-    public List<AssuranceCreateDTO> getAssurancesByViheculeId(String viheculeId) {
+
+    public List<AssuranceDTO> getAssurancesByViheculeId(String viheculeId) {
         List<Assurance> assurances = assuranceRepository.findByViheculeId(viheculeId);
         return assurances.stream()
-                .map(assurance -> modelMapper.map(assurance, AssuranceCreateDTO.class))
+                .map(assurance -> modelMapper.map(assurance, AssuranceDTO.class))
                 .collect(Collectors.toList());
     }
 

@@ -1,4 +1,4 @@
-package com.assurance.service;
+package com.assurance.dto;
 
 public class ApiResponse {
     private String message;

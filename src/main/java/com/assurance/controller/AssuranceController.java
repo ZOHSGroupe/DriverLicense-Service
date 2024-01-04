@@ -1,7 +1,11 @@
 package com.assurance.controller;
 
 import com.assurance.dto.AssuranceCreateDTO;
-import com.assurance.service.ApiResponse;
+import com.assurance.dto.ApiResponse;
+import com.assurance.dto.AssuranceDTO;
+import com.assurance.dto.AssuranceUpdateDTO;
+import com.assurance.exception.AssuranceAlreadyExistsException;
+import com.assurance.exception.AssuranceNotFoundException;
 import com.assurance.service.AssuranceService;
 import jakarta.validation.Valid;
 import org.modelmapper.*;
@@ -11,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/assurance")
@@ -27,49 +32,114 @@ public class AssuranceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AssuranceCreateDTO>> getAllAssurances() {
-        List<AssuranceCreateDTO> assurances = assuranceService.getAllAssurances();
-        return new ResponseEntity<>(assurances, HttpStatus.OK);
+    public ResponseEntity<?> getAllAssurances() {
+        try {
+            List<AssuranceDTO> assurances = assuranceService.getAllAssurances();
+            return new ResponseEntity<>(assurances, HttpStatus.OK);
+        } catch (Exception e) {
+            // Log the exception for debugging purposes
+            e.printStackTrace();
+            // Return a generic error message for the client
+            String errorMessage = "Internal server error occurred.";
+            ApiResponse errorResponse = new ApiResponse(errorMessage);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<AssuranceCreateDTO> getAssuranceById(@PathVariable String id) {
-        return assuranceService.getAssuranceById(id)
-                .map(assuranceCreateDTO -> new ResponseEntity<>(assuranceCreateDTO, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity<?> getAssuranceById(@PathVariable String id) {
+        try {
+            Optional<AssuranceDTO> assuranceOptional = assuranceService.getAssuranceById(id);
+
+            if (assuranceOptional.isPresent()) {
+                AssuranceDTO assuranceDTO = assuranceOptional.get();
+                return new ResponseEntity<>(assuranceDTO, HttpStatus.OK);
+            } else {
+                String notFoundMessage = "Assurance not found for id: " + id;
+                ApiResponse apiResponse = new ApiResponse(notFoundMessage);
+                return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            // Log the exception for debugging purposes
+            e.printStackTrace();
+
+            // Return a generic error message for the client
+            String errorMessage = "Internal server error occurred.";
+            ApiResponse errorResponse = new ApiResponse(errorMessage);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
+
 
 
     @PostMapping
     public ResponseEntity<ApiResponse> createAssurance(@Valid @RequestBody AssuranceCreateDTO assuranceCreateDTO) {
-        String viheculeId = assuranceCreateDTO.getViheculeId();
+        try {
+            // Attempt to save the assurance
+            Optional<AssuranceCreateDTO> createdAssuranceOptional = assuranceService.saveAssurance(assuranceCreateDTO);
 
-        // Check if an assurance already exists for the specified viheculeId
-        if (assuranceService.hasAssuranceForVihecule(viheculeId)) {
-            String message = "Assurance already exists for viheculeId " + viheculeId;
-            ApiResponse apiResponse = new ApiResponse(message);
+            // Check if the creation was successful
+            if (createdAssuranceOptional.isPresent()) {
+                String successMessage = "Assurance created successfully";
+                ApiResponse apiResponse = new ApiResponse(successMessage);
+                return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+            } else {
+                // Handle the case where the creation fails
+                String errorMessage = "Failed to create assurance";
+                ApiResponse apiResponse = new ApiResponse(errorMessage);
+                return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (AssuranceAlreadyExistsException e) {
+            // Log the exception for debugging purposes
+            e.printStackTrace();
+
+            // Return a specific error message for the client
+            String errorMessage = "Assurance already exists for this vihecule.";
+            ApiResponse apiResponse = new ApiResponse(errorMessage);
             return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
-        }
+        } catch (Exception e) {
+            // Log the exception for debugging purposes
+            e.printStackTrace();
 
-        AssuranceCreateDTO createdAssurance = assuranceService.saveAssurance(assuranceCreateDTO);
-        String message = "Assurance created successfully";
-        ApiResponse apiResponse = new ApiResponse(message);
-        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+            // Return a generic error message for the client
+            String errorMessage = "Internal server error occurred.";
+            ApiResponse apiResponse = new ApiResponse(errorMessage);
+            return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
+
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<AssuranceCreateDTO> updateAssurance(
-            @PathVariable String id,
-            @Valid @RequestBody AssuranceCreateDTO updatedAssuranceCreateDTO) {
-        AssuranceCreateDTO updatedAssurance = assuranceService.updateAssurance(id, updatedAssuranceCreateDTO);
-        if (updatedAssurance != null) {
-            return new ResponseEntity<>(updatedAssurance, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<ApiResponse> updateAssurance(@PathVariable String id, @RequestBody AssuranceUpdateDTO updatedAssuranceCreateDTO) {
+        try {
+            AssuranceDTO updatedAssuranceDTO = assuranceService.updateAssurance(id, updatedAssuranceCreateDTO);
+            String successMessage = "Assurance updated successfully";
+            ApiResponse apiResponse = new ApiResponse(successMessage);
+            return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+        } catch (AssuranceNotFoundException e) {
+            // Log the exception for debugging purposes
+            e.printStackTrace();
+
+            // Return a not found response for the client
+            String errorMessage = "Assurance not found for id: " + id;
+            ApiResponse apiResponse = new ApiResponse(errorMessage);
+            return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // Log the exception for debugging purposes
+            e.printStackTrace();
+
+            // Return a generic error message for the client
+            String errorMessage = "Internal server error occurred.";
+            ApiResponse apiResponse = new ApiResponse(errorMessage);
+            return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteAssurance(@PathVariable String id) {
@@ -85,8 +155,8 @@ public class AssuranceController {
     }
 
     @GetMapping("/vihecule/{viheculeId}")
-    public ResponseEntity<List<AssuranceCreateDTO>> getAssurancesByViheculeId(@PathVariable String viheculeId) {
-        List<AssuranceCreateDTO> assurances = assuranceService.getAssurancesByViheculeId(viheculeId);
+    public ResponseEntity<List<AssuranceDTO>> getAssurancesByViheculeId(@PathVariable String viheculeId) {
+        List<AssuranceDTO> assurances = assuranceService.getAssurancesByViheculeId(viheculeId);
         return new ResponseEntity<>(assurances, HttpStatus.OK);
     }
 
