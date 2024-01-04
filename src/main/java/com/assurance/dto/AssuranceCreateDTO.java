@@ -8,9 +8,9 @@ import lombok.Data;
 import java.util.Date;
 
 @Data
-public class AssuranceDTO {
+public class AssuranceCreateDTO {
 
-    private String id;
+    //private String id;
     private String type;
 
     @Temporal(TemporalType.DATE)

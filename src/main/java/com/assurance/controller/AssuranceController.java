@@ -1,7 +1,6 @@
 package com.assurance.controller;
 
-import com.assurance.dto.AssuranceDTO;
-import com.assurance.entity.Assurance;
+import com.assurance.dto.AssuranceCreateDTO;
 import com.assurance.service.ApiResponse;
 import com.assurance.service.AssuranceService;
 import jakarta.validation.Valid;
@@ -9,7 +8,6 @@ import org.modelmapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,23 +27,23 @@ public class AssuranceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AssuranceDTO>> getAllAssurances() {
-        List<AssuranceDTO> assurances = assuranceService.getAllAssurances();
+    public ResponseEntity<List<AssuranceCreateDTO>> getAllAssurances() {
+        List<AssuranceCreateDTO> assurances = assuranceService.getAllAssurances();
         return new ResponseEntity<>(assurances, HttpStatus.OK);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<AssuranceDTO> getAssuranceById(@PathVariable String id) {
+    public ResponseEntity<AssuranceCreateDTO> getAssuranceById(@PathVariable String id) {
         return assuranceService.getAssuranceById(id)
-                .map(assuranceDTO -> new ResponseEntity<>(assuranceDTO, HttpStatus.OK))
+                .map(assuranceCreateDTO -> new ResponseEntity<>(assuranceCreateDTO, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createAssurance(@Valid @RequestBody AssuranceDTO assuranceDTO) {
-        String viheculeId = assuranceDTO.getViheculeId();
+    public ResponseEntity<ApiResponse> createAssurance(@Valid @RequestBody AssuranceCreateDTO assuranceCreateDTO) {
+        String viheculeId = assuranceCreateDTO.getViheculeId();
 
         // Check if an assurance already exists for the specified viheculeId
         if (assuranceService.hasAssuranceForVihecule(viheculeId)) {
@@ -54,7 +52,7 @@ public class AssuranceController {
             return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
         }
 
-        AssuranceDTO createdAssurance = assuranceService.saveAssurance(assuranceDTO);
+        AssuranceCreateDTO createdAssurance = assuranceService.saveAssurance(assuranceCreateDTO);
         String message = "Assurance created successfully";
         ApiResponse apiResponse = new ApiResponse(message);
         return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
@@ -62,10 +60,10 @@ public class AssuranceController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<AssuranceDTO> updateAssurance(
+    public ResponseEntity<AssuranceCreateDTO> updateAssurance(
             @PathVariable String id,
-            @Valid @RequestBody AssuranceDTO updatedAssuranceDTO) {
-        AssuranceDTO updatedAssurance = assuranceService.updateAssurance(id, updatedAssuranceDTO);
+            @Valid @RequestBody AssuranceCreateDTO updatedAssuranceCreateDTO) {
+        AssuranceCreateDTO updatedAssurance = assuranceService.updateAssurance(id, updatedAssuranceCreateDTO);
         if (updatedAssurance != null) {
             return new ResponseEntity<>(updatedAssurance, HttpStatus.OK);
         } else {
@@ -87,8 +85,8 @@ public class AssuranceController {
     }
 
     @GetMapping("/vihecule/{viheculeId}")
-    public ResponseEntity<List<AssuranceDTO>> getAssurancesByViheculeId(@PathVariable String viheculeId) {
-        List<AssuranceDTO> assurances = assuranceService.getAssurancesByViheculeId(viheculeId);
+    public ResponseEntity<List<AssuranceCreateDTO>> getAssurancesByViheculeId(@PathVariable String viheculeId) {
+        List<AssuranceCreateDTO> assurances = assuranceService.getAssurancesByViheculeId(viheculeId);
         return new ResponseEntity<>(assurances, HttpStatus.OK);
     }
 

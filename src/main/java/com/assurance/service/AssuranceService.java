@@ -1,6 +1,6 @@
 package com.assurance.service;
 
-import com.assurance.dto.AssuranceDTO;
+import com.assurance.dto.AssuranceCreateDTO;
 import com.assurance.entity.Assurance;
 import com.assurance.repository.AssuranceRepository;
 import org.modelmapper.ModelMapper;
@@ -23,23 +23,23 @@ public class AssuranceService {
         this.modelMapper = modelMapper;
     }
 
-    public AssuranceDTO saveAssurance(AssuranceDTO assuranceDTO) {
-        Assurance assurance = modelMapper.map(assuranceDTO, Assurance.class);
+    public AssuranceCreateDTO saveAssurance(AssuranceCreateDTO assuranceCreateDTO) {
+        Assurance assurance = modelMapper.map(assuranceCreateDTO, Assurance.class);
         // You can perform additional business logic here before saving
         assurance = assuranceRepository.save(assurance);
-        return modelMapper.map(assurance, AssuranceDTO.class);
+        return modelMapper.map(assurance, AssuranceCreateDTO.class);
     }
 
-    public List<AssuranceDTO> getAllAssurances() {
+    public List<AssuranceCreateDTO> getAllAssurances() {
         List<Assurance> assurances = assuranceRepository.findAll();
         return assurances.stream()
-                .map(assurance -> modelMapper.map(assurance, AssuranceDTO.class))
+                .map(assurance -> modelMapper.map(assurance, AssuranceCreateDTO.class))
                 .collect(Collectors.toList());
     }
 
-    public Optional<AssuranceDTO> getAssuranceById(String id) {
+    public Optional<AssuranceCreateDTO> getAssuranceById(String id) {
         return assuranceRepository.findById(id)
-                .map(assurance -> modelMapper.map(assurance, AssuranceDTO.class));
+                .map(assurance -> modelMapper.map(assurance, AssuranceCreateDTO.class));
     }
 
     public boolean deleteAssuranceById(String id) {
@@ -59,24 +59,24 @@ public class AssuranceService {
     }
 
 
-    public AssuranceDTO updateAssurance(String id, AssuranceDTO updatedAssuranceDTO) {
+    public AssuranceCreateDTO updateAssurance(String id, AssuranceCreateDTO updatedAssuranceCreateDTO) {
         Optional<Assurance> existingAssuranceOptional = assuranceRepository.findById(id);
         if (existingAssuranceOptional.isPresent()) {
             Assurance existingAssurance = existingAssuranceOptional.get();
-            modelMapper.map(updatedAssuranceDTO, existingAssurance);
+            modelMapper.map(updatedAssuranceCreateDTO, existingAssurance);
             // You can perform additional business logic here before updating
             existingAssurance = assuranceRepository.save(existingAssurance);
-            return modelMapper.map(existingAssurance, AssuranceDTO.class);
+            return modelMapper.map(existingAssurance, AssuranceCreateDTO.class);
         } else {
             // Handle not found case
             return null;
         }
     }
 
-    public List<AssuranceDTO> getAssurancesByViheculeId(String viheculeId) {
+    public List<AssuranceCreateDTO> getAssurancesByViheculeId(String viheculeId) {
         List<Assurance> assurances = assuranceRepository.findByViheculeId(viheculeId);
         return assurances.stream()
-                .map(assurance -> modelMapper.map(assurance, AssuranceDTO.class))
+                .map(assurance -> modelMapper.map(assurance, AssuranceCreateDTO.class))
                 .collect(Collectors.toList());
     }
 
