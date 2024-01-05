@@ -3,16 +3,21 @@
 Assurance-Service is an Application Programming interface for add,update,delete and get Assurance of ZOHS company.
 
 ---
-## Installation
-
-
----
 ## Running the app
-
-
+```bash
+# build app
+$ mvn clean install
+# run the app
+$ java -jar target/client-0.0.1-SNAPSHOT.jar
+```
 ---
 ## Dockerize the app
-
+```bash
+# dockerize the app with mysql database
+$ docker compose up
+# stop the application
+$ docker compose down
+```
 ---
 
 ## DTOs (Data Transfer Objects) for Assurance
@@ -126,5 +131,5 @@ Represents the data used to update an existing assurance.
 
 ## Stay in touch
 - Author - [Ouail Laamiri](https://www.linkedin.com/in/ouaillaamiri/)
-- Test - [Postman]()
+- Test - [Postman](https://www.postman.com/avionics-meteorologist-32935362/workspace/postman-api-fundamentals-student-expert/collection/29141176-a003f1fe-f498-4933-9803-c7492b139736?action=share&creator=29141176)
 - Documentation - [Postman]()
