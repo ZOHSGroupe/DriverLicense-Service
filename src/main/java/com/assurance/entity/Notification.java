@@ -2,14 +2,14 @@ package com.assurance.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @Entity
-@Data @AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@ToString @AllArgsConstructor @NoArgsConstructor
 public class Notification {
     @Id
     String id;

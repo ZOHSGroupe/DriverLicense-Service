@@ -2,16 +2,14 @@ package com.assurance.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter @Setter @ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Assurance {

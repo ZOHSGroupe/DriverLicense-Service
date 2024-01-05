@@ -1,15 +1,15 @@
 package com.assurance.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data @AllArgsConstructor @NoArgsConstructor
+@Getter
+@Setter
+@ToString @AllArgsConstructor @NoArgsConstructor
 public class Client{
     @Id
     String id;
