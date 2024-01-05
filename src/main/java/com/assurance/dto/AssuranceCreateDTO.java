@@ -1,10 +1,13 @@
 package com.assurance.dto;
 
 
+import com.assurance.enums.Status;
+import com.assurance.enums.TypeAssurance;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -15,13 +18,13 @@ import java.util.Date;
 public class AssuranceCreateDTO {
 
     //private String id;
-    private String type;
+    private TypeAssurance type;
 
     @Temporal(TemporalType.DATE)
-    private Date dateCreate;
+    private LocalDate dateCreate;
 
-    private String status;
+    private Status status;
     private String viheculeId;
-    private String price;
+    private Double price;
 
 }

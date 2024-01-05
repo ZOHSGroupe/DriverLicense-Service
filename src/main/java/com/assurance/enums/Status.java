@@ -1,4 +1,4 @@
-package com.assurance.entity.enumerate;
+package com.assurance.enums;
 
 public enum Status {
     PENDING,

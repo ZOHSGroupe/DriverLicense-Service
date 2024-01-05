@@ -1,4 +1,6 @@
 package com.assurance.dto;
+import com.assurance.enums.Status;
+import com.assurance.enums.TypeAssurance;
 import lombok.*;
 
 import java.util.Date;
@@ -10,7 +12,7 @@ import java.util.Date;
 @Getter
 @ToString
 public class AssuranceUpdateDTO {
-    private String type;
-    private String status;
-    private String price;
+    private TypeAssurance type;
+    private Status status;
+    private Double price;
 }

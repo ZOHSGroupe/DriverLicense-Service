@@ -1,4 +1,4 @@
-package com.assurance.controller;
+package com.assurance.web;
 
 import com.assurance.dto.AssuranceCreateDTO;
 import com.assurance.dto.ApiResponse;
