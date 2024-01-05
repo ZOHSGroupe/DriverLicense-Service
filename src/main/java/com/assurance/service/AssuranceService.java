@@ -7,6 +7,7 @@ import com.assurance.entity.Assurance;
 import com.assurance.exception.AssuranceAlreadyExistsException;
 import com.assurance.exception.AssuranceNotFoundException;
 import com.assurance.repository.AssuranceRepository;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,16 +17,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class AssuranceService {
 
     private final AssuranceRepository assuranceRepository;
     private final ModelMapper modelMapper;
 
-    @Autowired
-    public AssuranceService(AssuranceRepository assuranceRepository, ModelMapper modelMapper) {
-        this.assuranceRepository = assuranceRepository;
-        this.modelMapper = modelMapper;
-    }
 
 
     public Optional<AssuranceCreateDTO> saveAssurance(AssuranceCreateDTO assuranceCreateDTO) {

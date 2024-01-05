@@ -8,6 +8,7 @@ import com.assurance.exception.AssuranceAlreadyExistsException;
 import com.assurance.exception.AssuranceNotFoundException;
 import com.assurance.service.AssuranceService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.modelmapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,17 +20,15 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/assurance")
+@AllArgsConstructor
 public class AssuranceController {
 
     private final AssuranceService assuranceService;
 
     private final ModelMapper modelMapper;
 
-    @Autowired
-    public AssuranceController(AssuranceService assuranceService, ModelMapper modelMapper) {
-        this.assuranceService = assuranceService;
-        this.modelMapper = modelMapper;
-    }
+
+
 
     @GetMapping
     public ResponseEntity<?> getAllAssurances() {
