@@ -133,3 +133,8 @@ Represents the data used to update an existing assurance.
 - Author - [Ouail Laamiri](https://www.linkedin.com/in/ouaillaamiri/)
 - Test - [Postman](https://www.postman.com/avionics-meteorologist-32935362/workspace/postman-api-fundamentals-student-expert/collection/29141176-a003f1fe-f498-4933-9803-c7492b139736?action=share&creator=29141176)
 - Documentation - [Postman]()
+
+
+## License
+
+Assurance-Service is [GPL licensed](LICENSE).
