@@ -1,7 +1,7 @@
 package com.client.controller;
 
 
-
+import com.client.dao.DriverLicenseDao;
 import com.client.entity.DriverLicense;
 import com.client.Services.DriverLicenseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class DriverLicenseController {
     }
 
 
-    @RequestMapping(value="/{id}",method=RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Optional<DriverLicense> getDriverLicenseById(@PathVariable String id) {
         return driverLicenseService.getDriverLicenseById(id);
     }
@@ -38,21 +38,23 @@ public class DriverLicenseController {
     }
 
 
-
-    @RequestMapping(value="/{id}",method=RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void deleteDriverLicense(@PathVariable String id) {
         driverLicenseService.deleteDriverLicense(id);
     }
 
 
-
-
-    @RequestMapping(value="/show/{id}",method=RequestMethod.GET)
+    @RequestMapping(value = "/show/{id}", method = RequestMethod.GET)
     public Optional<DriverLicense> showDriverLicenseDetails(@PathVariable String id) {
         return driverLicenseService.getDriverLicenseById(id);
     }
-    @RequestMapping(value="/add",method=RequestMethod.POST)
-    public DriverLicense addDriverLicense(@RequestBody DriverLicense driverLicense) {
+
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public DriverLicense addDriverLicense(@RequestBody DriverLicenseDao driverLicenseDao) {
+        DriverLicense driverLicense = new DriverLicense();
+        driverLicense.setLicenseNumber(driverLicenseDao.getLicenseNumber());
+        driverLicense.setType(driverLicenseDao.getType());
+        driverLicense.setStatus(driverLicenseDao.getStatus());
         return driverLicenseService.saveDriverLicense(driverLicense);
     }
 }
