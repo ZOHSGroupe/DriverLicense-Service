@@ -7,6 +7,7 @@ import com.client.Services.DriverLicenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,6 +54,8 @@ public class DriverLicenseController {
     public DriverLicense addDriverLicense(@RequestBody DriverLicenseDao driverLicenseDao) {
         DriverLicense driverLicense = new DriverLicense();
         driverLicense.setLicenseNumber(driverLicenseDao.getLicenseNumber());
+        driverLicense.setIssueDate(new Date());
+        driverLicense.setExpirationDate(driverLicenseDao.getExpirationDate());
         driverLicense.setType(driverLicenseDao.getType());
         driverLicense.setStatus(driverLicenseDao.getStatus());
         return driverLicenseService.saveDriverLicense(driverLicense);

@@ -13,11 +13,9 @@ import java.util.Date;
 public class DriverLicenseDao {
 
 
-    String licenseNumber;
-
-
-
-    TypeDriverLicense type;
-    Status status;
-
+    private String licenseNumber;
+    private Date issueDate;
+    private Date expirationDate;
+    private TypeDriverLicense type;
+    private Status status;
 }
