@@ -1,10 +1,10 @@
-package com.assurance;
+package com.driverlicence;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AssuranceApplicationTests {
+class DriverLicenceApplicationTests {
 
 	@Test
 	void contextLoads() {

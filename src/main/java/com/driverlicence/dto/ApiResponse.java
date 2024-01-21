@@ -1,4 +1,4 @@
-package com.assurance.dto;
+package com.driverlicence.dto;
 
 import lombok.*;
 
