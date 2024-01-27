@@ -40,7 +40,8 @@ public class DriverLicenceController {
     }
 
 
-    @GetMapping
+
+    @GetMapping(value = {"","/","/all"})
     public List<DriverLicenceDTO> getAllDriverLicenses() {
         return driverLicenceService.getAllADriverLicenses();
     }
@@ -116,5 +117,9 @@ public class DriverLicenceController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse("Driver licence not exist with id client : "+clientId));
         }
+    }
+    @GetMapping("/test")
+    public ResponseEntity<ApiResponse> test(){
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("Driver licenses service work successuflly:"));
     }
 }

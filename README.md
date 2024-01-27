@@ -8,7 +8,7 @@ DriverLicense-Service is an Application Programming interface for add,update,del
 # build app
 $ mvn clean install
 # run the app
-$ java -jar target/client-0.0.1-SNAPSHOT.jar
+$ java -jar target/driver-license-service.jar
 ```
 ---
 ## Dockerize the app
